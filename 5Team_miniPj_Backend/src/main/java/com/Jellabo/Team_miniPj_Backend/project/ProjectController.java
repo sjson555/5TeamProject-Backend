@@ -17,7 +17,8 @@ public class ProjectController {
 
 	// 현재 프로젝트 정보 불러오기
 	@PostMapping("/loadProjectInfo")
-	public ProjectDataDTO loadProjectInfo(@RequestParam(value = "code") int code, @RequestParam(value = "email") String email) {
+	public ProjectDataDTO loadProjectInfo(@RequestParam(value = "code") int code,
+			@RequestParam(value = "email") String email) {
 
 	}
 
@@ -65,8 +66,9 @@ public class ProjectController {
 
 	// 프로젝트 삭제
 	@PostMapping("/deleteProjectProcess")
-	public int deleteProjectProcess(@RequestParam(value = "code") int code, @RequestParam(value = "email") String email) {
-
+	public int deleteProjectProcess(@RequestBody ProjectDataDTO project) {
+		int res = pjService.deleteProjectProcess(project);
+		return res;
 	}
 
 }

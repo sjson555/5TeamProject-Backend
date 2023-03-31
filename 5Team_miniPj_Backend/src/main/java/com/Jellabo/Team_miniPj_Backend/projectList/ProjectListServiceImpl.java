@@ -36,8 +36,9 @@ public class ProjectListServiceImpl implements ProjectListService {
 		// 참여 프로젝트 목록에 저장
 		mapper.insertJoinedProject(project);
 
+		String sqlQuery1 = "", sqlQuery2 = "", sqlQuery3 = "";
+
 		// posts[code] 테이블 생성
-		String sqlQuery1 = "";
 		sqlQuery1 += "CREATE TABLE posts" + code + " (";
 		sqlQuery1 += "	postnum  		INT NOT NULL AUTO_INCREMENT PRIMARY KEY,";
 		sqlQuery1 += "	category 		VARCHAR(15) NOT NULL,";
@@ -48,9 +49,8 @@ public class ProjectListServiceImpl implements ProjectListService {
 		sqlQuery1 += "	FOREIGN KEY(powriteremail) REFERENCES users(email) ON DELETE CASCADE ON UPDATE CASCADE";
 		sqlQuery1 += ");";
 		mapper.createPostsTable(sqlQuery1);
-		
+
 		// comments[code] 테이블 생성
-		String sqlQuery2 = "";
 		sqlQuery2 += "CREATE TABLE comments" + code + " (";
 		sqlQuery2 += "	commentnum 		INT NOT NULL AUTO_INCREMENT PRIMARY KEY,";
 		sqlQuery2 += "	postnum 		INT NOT NULL,";
@@ -60,9 +60,8 @@ public class ProjectListServiceImpl implements ProjectListService {
 		sqlQuery2 += "	FOREIGN KEY(cowriteremail) REFERENCES users(email) ON DELETE CASCADE ON UPDATE CASCADE";
 		sqlQuery2 += ");";
 		mapper.createCommentsTable(sqlQuery2);
-		
+
 		// reples[code] 테이블 생성
-		String sqlQuery3 = "";
 		sqlQuery3 += "CREATE TABLE reples" + code + " (";
 		sqlQuery3 += "	replenum 		INT NOT NULL AUTO_INCREMENT PRIMARY KEY,";
 		sqlQuery3 += "	postnum 		INT NOT NULL,";
@@ -74,10 +73,10 @@ public class ProjectListServiceImpl implements ProjectListService {
 		sqlQuery3 += "	FOREIGN KEY(rewriteremail) REFERENCES users(email) ON DELETE CASCADE ON UPDATE CASCADE";
 		sqlQuery3 += ");";
 		mapper.createReplesTable(sqlQuery3);
-		
+
 		// 필수 카테고리 추가
 		int res = mapper.insertCategory(code);
-		
+
 		return res;
 	}
 

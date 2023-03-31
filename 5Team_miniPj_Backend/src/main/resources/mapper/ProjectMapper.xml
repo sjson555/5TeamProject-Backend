@@ -3,8 +3,41 @@
 	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.Jellabo.Team_miniPj_Backend.project.ProjectMapper">
+<mapper
+	namespace="com.Jellabo.Team_miniPj_Backend.project.ProjectMapper">
 
-	<!-- 이 곳에서 프로젝트 페이지 관련 SQL 쿼리문 작성 -->
+	<select id="isCreator" parameterType="ProjectDataDTO"
+		resultType="Integer">
+		SELECT COUNT(*) FROM projects WHERE code = #{code,
+		jdbcType=INTEGER}
+		AND creatoremail = #{creatoremail, jdbcType=VARCHAR};
+	</select>
+
+	<update id="dropReplesTable" parameterType="java.lang.String">
+		${value}
+	</update>
+
+	<update id="dropCommentsTable" parameterType="java.lang.String">
+		${value}
+	</update>
+
+	<update id="dropPostsTable" parameterType="java.lang.String">
+		${value}
+	</update>
+
+	<delete id="deleteCategory" parameterType="Integer">
+		DELETE FROM category
+		WHERE code = #{code, jdbcType=INTEGER};
+	</delete>
+
+	<delete id="deleteJoinedProject" parameterType="Integer">
+		DELETE FROM
+		joinedprojects WHERE code = #{code, jdbcType=INTEGER};
+	</delete>
+
+	<delete id="deleteProject" parameterType="Integer">
+		DELETE FROM projects
+		WHERE code = #{code, jdbcType=INTEGER};
+	</delete>
 
 </mapper>
