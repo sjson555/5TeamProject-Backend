@@ -22,7 +22,8 @@ public class ProjectListController {
 	// 프로젝트 생성
 	@PostMapping("/createProjectProcess")
 	public int createProjectProcess(@RequestBody ProjectListDataDTO project) {
-
+		int res = pjlService.createProjectProcess(project);
+		return res;
 	}
 
 	// 프로젝트 참여

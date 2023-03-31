@@ -3,8 +3,42 @@
 	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.Jellabo.Team_miniPj_Backend.projectList.MemberMapper">
+<mapper namespace="com.Jellabo.Team_miniPj_Backend.projectList.ProjectListMapper">
 
-	<!-- 이 곳에서 프로젝트 리스트 페이지 관련 SQL 쿼리문 작성 -->
+	<!-- 프로젝트 생성 기능 시작 -->
+	<select id="codeList" resultType="Integer">
+		SELECT code FROM projects;
+	</select>
+
+	<insert id="insertProject" parameterType="ProjectListDataDTO">
+		INSERT INTO projects 
+		VALUES(#{code, jdbcType=INTEGER}, #{title, jdbcType=VARCHAR}, 
+		#{description, jdbcType=VARCHAR}, #{creatoremail, jdbcType=VARCHAR}, 
+		#{deadline, jdbcType=DATE});
+	</insert>
+
+	<insert id="insertJoinedProject" parameterType="ProjectListDataDTO">
+		INSERT INTO joinedprojects 
+		VALUES(#{creatoremail, 
+		jdbcType=VARCHAR}, #{code, jdbcType=INTEGER});
+	</insert>
+
+	<update id="createPostsTable" parameterType="java.lang.String">
+		${value}
+	</update>
+
+	<update id="createCommentsTable" parameterType="java.lang.String">
+		${value}
+	</update>
+
+	<update id="createReplesTable" parameterType="java.lang.String">
+		${value}
+	</update>
+
+	<insert id="insertCategory" parameterType="Integer">
+		INSERT INTO category 
+		VALUES(#{code, jdbcType=INTEGER}, "공지사항");
+	</insert>
+	<!-- 프로젝트 생성 기능 끝 -->
 
 </mapper>
