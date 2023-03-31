@@ -13,21 +13,25 @@ public class ProjectListController {
 		this.pjlService = pjlService;
 	}
 
+	// 프로젝트 리스트 불러오기
 	@GetMapping("/myprojectslist")
 	public List<ProjectListDataDTO> loadProjectList(@RequestParam(value = "email") String email) {
 
 	}
 
+	// 프로젝트 생성
 	@PostMapping("/createProjectProcess")
 	public int createProjectProcess(@RequestBody ProjectListDataDTO project) {
 
 	}
 
+	// 프로젝트 참여
 	@PostMapping("/joinProjectProcess")
 	public int joinProjectProcess(@RequestParam(value = "code") int code, @RequestParam(value = "email") String email) {
 
 	}
 
+	// 프로젝트 탈퇴
 	@PostMapping("/exitProjectProcess")
 	public int exitProjectProcess(@RequestParam(value = "code") int code, @RequestParam(value = "email") String email) {
 
