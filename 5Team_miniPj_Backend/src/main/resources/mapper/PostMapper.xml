@@ -3,8 +3,44 @@
 	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.Jellabo.Team_miniPj_Backend.posts.MemberMapper">
-
+<mapper namespace="com.Jellabo.Team_miniPj_Backend.posts.PostMapper">
 	<!-- 이 곳에서 게시글/댓글/답글 관련 SQL 쿼리문 작성 -->
+	
+	<!-- 카테고리 글 개수 -->
+	<select id="loadPostCount" resultType="Integer">
+		select count(*) as count from posts${code} where category = #{category}
+	</select>
+	
+	<!-- 카테고리 별 게시글 불러오기 -->
+	<select id="loadPost" resultType="PostDTO">
+		select postnum, posttitle, posteddate from posts${code} 
+		where category = #{category} order by postnum desc
+	</select>
+	
+	<!-- 상세보기를 위한 글 개수 -->
+	<select id="detailPostCount" resultType="Integer">
+		select count(*) as count from posts${code} where postnum = #{postnum}
+	</select>
+	
+	<!-- 글 상세보기 -->
+	<select id="detailPost" resultType="PostDTO">
+		select po.category, po.postnum, po.posttitle, po.postcontent, u.nickname, po.powriteremail, posteddate 
+		from posts${code} po inner join users u on po.powriteremail = u.email where postnum = #{postnum}
+	</select>
+	
+	<!-- 글 작성하기 -->
+	<insert id="writePost" parameterType="PostDTO">
+		insert into posts${code} (category, posttitle, postcontent, powriteremail) values(#{category}, #{posttitle}, #{postcontent}, #{powriteremail})
+	</insert>
+	
+	<!-- 글 수정하기 -->
+	<update id="updatePost" parameterType="PostDTO">
+		update posts${code} set category = #{category}, posttitle = #{posttitle}, postcontent = #{postcontent} where postnum = #{postnum}
+	</update>
+	
+	<!-- 글 삭제하기 -->
+	<delete id="deletePost" parameterType="int">
+		delete from posts${code} where postnum = #{postnum}
+	</delete>
 
 </mapper>

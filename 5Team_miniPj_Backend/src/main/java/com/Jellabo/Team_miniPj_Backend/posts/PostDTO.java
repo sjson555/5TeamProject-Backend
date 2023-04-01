@@ -1,6 +1,9 @@
 package com.Jellabo.Team_miniPj_Backend.posts;
 
 import java.sql.Date;
+//import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.*;
 
@@ -16,5 +19,6 @@ public class PostDTO {
 	private String postcontent;
 	private String nickname;
 	private String powriteremail;
+//	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date posteddate;
 }

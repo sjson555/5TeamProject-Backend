@@ -17,9 +17,9 @@ public class UserServiceController {
 		
 	}
 	
-	@PostMapping("/loginProcess")
-	public UserDTO loginProcess(@RequestBody String email, @RequestBody String password) {
-		
-	}
+//	@PostMapping("/loginProcess")
+//	public UserDTO loginProcess(@RequestBody String email, @RequestBody String password) {
+//		
+//	}
 	
 }
