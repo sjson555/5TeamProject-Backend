@@ -3,8 +3,93 @@
 	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.Jellabo.Team_miniPj_Backend.project.MemberMapper">
+<mapper
+	namespace="com.Jellabo.Team_miniPj_Backend.project.ProjectMapper">
+	<!-- 프로젝트 정보 불러오기 -->
+	<select id="loadProjectInfo"
+		resultType="com.Jellabo.Team_miniPj_Backend.project.ProjectDataDTO">
+		<if test="code != null">
+			SELECT code, title, description, nickname, creatoremail, deadline
+			FROM projects p
+			INNER JOIN users u ON p.creatoremail = u.email
+			WHERE
+			p.code = #{code}
+			<choose>
+				<when test="email != null">
+					AND EXISTS (SELECT 1
+					FROM joinedprojects
+					WHERE email =
+					#{email} AND code = #{code})
+				</when>
+				<otherwise>
+					AND NOT EXISTS (SELECT 1
+					FROM joinedprojects
+					WHERE code =
+					#{code})
+				</otherwise>
+			</choose>
+		</if>
+	</select>
 
-	<!-- 이 곳에서 프로젝트 페이지 관련 SQL 쿼리문 작성 -->
+	<!-- 카테고리 불러오기 -->
+	<select id="loadCategories" resultType="java.lang.String">
+		SELECT category FROM
+		category WHERE code = #{code}
+	</select>
 
+	<!-- 카테고리 생성 -->
+	<insert id="createCategoryProcess"
+		parameterType="com.Jellabo.Team_miniPj_Backend.project.CategoryDTO">
+		INSERT INTO category VALUES(#{code}, #{category})
+	</insert>
+
+	<!-- 카테고리 삭제 -->
+	<delete id="deleteCategoryProcess"
+		parameterType="com.Jellabo.Team_miniPj_Backend.project.CategoryDTO">
+		<if test="category != '★ 개요' and category != '공지사항'">
+			DELETE FROM category WHERE code = #{code} AND category =
+			#{category}
+		</if>
+	</delete>
+
+	<!-- 참여자목록 불러오기 -->
+	<select id="loadUserList"
+		resultType="com.Jellabo.Team_miniPj_Backend.users.UserDTO">
+		SELECT
+		j.email, u.name, u.nickname FROM projects p
+		INNER
+		JOIN joinedprojects j
+		ON p.code = j.code
+		INNER JOIN users u ON j.email
+		= u.email
+		WHERE p.code =
+		#{code};
+	</select>
+
+	<!-- 멤버 추가하기 -->
+	<insert id="addUserProcess" parameterType="map">
+		INSERT INTO
+		joinedprojects (code, email) SELECT #{code}, #{email} WHERE
+		EXISTS (
+		SELECT
+		1 FROM users WHERE email = #{email} ) AND NOT EXISTS (
+		SELECT 1
+		FROM
+		joinedprojects
+		WHERE email = #{email} AND code = #{code} )
+	</insert>
+
+	<!-- 맴버 추방하기 -->
+	<delete id="kickUserProcess" parameterType="map">
+		DELETE FROM
+		joinedprojects
+		WHERE email = #{email} AND code = #{code};
+	</delete>
+
+	<!-- 프로젝트정보 수정하기 -->
+	<update id="resettingProjectProcess" parameterType="map">
+		UPDATE
+		projects SET title=#{title}, description=#{description},
+		deadline=#{deadline} WHERE code=#{code};
+	</update>
 </mapper>
