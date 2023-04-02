@@ -13,6 +13,7 @@ public class ProjectDataDTO {
 	private String title;
 	private String description;
 	private String nickname;
+	private String email;
 	private String creatoremail;
 	private Date deadline;
 }

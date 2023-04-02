@@ -13,19 +13,39 @@ public class ProjectListServiceImpl implements ProjectListService {
 		this.mapper = mapper;
 	}
 
+	@Override // 프로젝트 리스트 불러오기
+	public List<ProjectListDataDTO> loadProjectList(String email) {
+		List<ProjectListDataDTO> res = null;
+		int count = mapper.projectsListCheck(email);
+
+		if (count != 0) {
+			res = mapper.loadProjectList(email);
+		}
+
+		return res;
+	}
+
 	@Override // 프로젝트 생성
 	public int createProjectProcess(ProjectListDataDTO project) {
+		// 프로젝트 code 리스트 불러오기
+		List<Integer> codeList = mapper.codeList();
+		System.out.println(codeList.size() == 0);
+
 		// 프로젝트 code 난수 생성
 		int code;
-		List<Integer> codeList = mapper.codeList();
 		loop: while (true) {
-			code = (int) (Math.random() * 1000000);
+			code = (int) (Math.random() * 10000000);
 
-			for (Integer i : codeList) {
-				if (code == i) {
+			if (code == 0) {
+				continue loop;
+			}
+
+			for (Integer num : codeList) {
+				if (code == num) {
 					continue loop;
 				}
 			}
+
 			project.setCode(code);
 			break;
 		}
@@ -76,6 +96,41 @@ public class ProjectListServiceImpl implements ProjectListService {
 
 		// 필수 카테고리 추가
 		int res = mapper.insertCategory(code);
+
+		return res;
+	}
+
+	@Override // 프로젝트 참여
+	public int joinProjectProcess(ProjectListDataDTO project) {
+		int res = mapper.projectCodeCheck(project.getCode());
+
+		// 실재 프로젝트 여부 확인
+		if (res == 0) {
+			res = -1;
+		} else {
+			res = mapper.projectJoinCheck(project);
+
+			// 프로젝트 참여 중 여부 확인
+			if (res == 1) {
+				res = 0;
+			} else {
+				res = mapper.joinProjectProcess(project);
+			}
+		}
+
+		return res;
+	}
+
+	@Override // 프로젝트 탈퇴
+	public int exitProjectProcess(ProjectListDataDTO project) {
+		int res = mapper.projectCreatorCheck(project);
+
+		// 프로젝트 관리자 여부 확인
+		if (res == 1) {
+			res = 0;
+		} else {
+			res = mapper.exitProjectProcess(project);
+		}
 
 		return res;
 	}

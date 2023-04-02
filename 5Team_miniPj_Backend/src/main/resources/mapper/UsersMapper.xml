@@ -5,6 +5,32 @@
 
 <mapper namespace="com.Jellabo.Team_miniPj_Backend.users.UserMapper">
 
-	<!-- 이 곳에서 로그인/회원가입 관련 SQL 쿼리문 작성 -->
+	<!-- 회원가입/로그인 공통 기능 시작 -->
+	<select id="emailCheck" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) 
+		FROM users 
+		WHERE email = #{email};
+	</select>
+	<!-- 회원가입/로그인 공통 기능 끝 -->
+
+	<!-- 회원가입 기능 시작 -->
+	<insert id="registerProcess" parameterType="UserDTO">
+		INSERT INTO users 
+		VALUES(#{email}, #{password}, 
+		#{name}, #{nickname}, #{birthday});
+	</insert>
+	<!-- 회원가입 기능 끝 -->
+
+	<!-- 로그인 기능 시작 -->
+	<select id="loginCheck" parameterType="UserDTO" resultType="Integer">
+		SELECT COUNT(*) FROM users 
+		WHERE email = #{email} AND password = #{password};
+	</select>
+
+	<select id="loginProcess" parameterType="UserDTO" resultType="UserDTO">
+		SELECT email, nickname FROM users
+		WHERE email = #{email} AND password = #{password};
+	</select>
+	<!-- 로그인 기능 끝 -->
 
 </mapper>

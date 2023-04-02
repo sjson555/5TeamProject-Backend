@@ -1,8 +1,18 @@
 package com.Jellabo.Team_miniPj_Backend.users;
 
-// 어노테이션 필요없습니다.
+import org.apache.ibatis.annotations.Param;
+
 public interface UserMapper {
 
-	// 이 곳에 로그인/로그아웃 페이지에 필요한 매퍼 메서드 구현
+	// 회원가입/로그인 공통 기능
+	int emailCheck(@Param("email") String email);
+
+	// 회원가입 기능
+	int registerProcess(UserDTO user);
+
+	// 로그인 기능
+	int loginCheck(UserDTO user);
+
+	UserDTO loginProcess(UserDTO user);
 
 }

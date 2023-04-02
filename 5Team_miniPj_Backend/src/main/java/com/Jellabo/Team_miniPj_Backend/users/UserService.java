@@ -2,6 +2,10 @@ package com.Jellabo.Team_miniPj_Backend.users;
 
 public interface UserService {
 
-	// 이 곳에 로그인/로그아웃 페이지에 필요한 서비스 메서드 구현
+	// 회원가입 기능
+	int registerProcess(UserDTO user);
+
+	// 로그인 기능
+	UserDTO loginProcess(UserDTO user);
 
 }

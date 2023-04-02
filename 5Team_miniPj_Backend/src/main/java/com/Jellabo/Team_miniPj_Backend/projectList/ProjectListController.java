@@ -1,5 +1,6 @@
 package com.Jellabo.Team_miniPj_Backend.projectList;
 
+import java.io.Console;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
@@ -16,26 +17,25 @@ public class ProjectListController {
 	// 프로젝트 리스트 불러오기
 	@GetMapping("/myprojectslist")
 	public List<ProjectListDataDTO> loadProjectList(@RequestParam(value = "email") String email) {
-
+		return pjlService.loadProjectList(email);
 	}
 
 	// 프로젝트 생성
 	@PostMapping("/createProjectProcess")
 	public int createProjectProcess(@RequestBody ProjectListDataDTO project) {
-		int res = pjlService.createProjectProcess(project);
-		return res;
+		return pjlService.createProjectProcess(project);
 	}
 
 	// 프로젝트 참여
 	@PostMapping("/joinProjectProcess")
-	public int joinProjectProcess(@RequestParam(value = "code") int code, @RequestParam(value = "email") String email) {
-
+	public int joinProjectProcess(@RequestBody ProjectListDataDTO project) {
+		return pjlService.joinProjectProcess(project);
 	}
 
 	// 프로젝트 탈퇴
 	@PostMapping("/exitProjectProcess")
-	public int exitProjectProcess(@RequestParam(value = "code") int code, @RequestParam(value = "email") String email) {
-
+	public int exitProjectProcess(@RequestBody ProjectListDataDTO project) {
+		return pjlService.exitProjectProcess(project);
 	}
 
 }

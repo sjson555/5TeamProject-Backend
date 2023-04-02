@@ -5,9 +5,28 @@
 
 <mapper namespace="com.Jellabo.Team_miniPj_Backend.projectList.ProjectListMapper">
 
+	<!-- 프로젝트 리스트 불러오기 기능 시작 -->
+	<select id="projectsListCheck" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) 
+		FROM joinedprojects 
+		WHERE email = #{email};
+	</select>
+
+	<select id="loadProjectList" parameterType="String" resultType="ProjectListDataDTO">
+		SELECT j.code, p.title, p.description, 
+		DATE_FORMAT(p.deadline, "%Y-%m-%d") AS deadline, p.creatoremail 
+		FROM joinedprojects j 
+		INNER JOIN projects p ON j.code = p.code 
+		WHERE j.email = #{email} 
+		ORDER BY p.deadline ASC;
+	</select>
+	<!-- 프로젝트 리스트 불러오기 기능 끝 -->
+
 	<!-- 프로젝트 생성 기능 시작 -->
 	<select id="codeList" resultType="Integer">
-		SELECT code FROM projects;
+		SELECT code 
+		FROM projects 
+		ORDER BY code ASC;
 	</select>
 
 	<insert id="insertProject" parameterType="ProjectListDataDTO">
@@ -19,20 +38,20 @@
 
 	<insert id="insertJoinedProject" parameterType="ProjectListDataDTO">
 		INSERT INTO joinedprojects 
-		VALUES(#{creatoremail, 
-		jdbcType=VARCHAR}, #{code, jdbcType=INTEGER});
+		VALUES(#{creatoremail, jdbcType=VARCHAR}, 
+		#{code, jdbcType=INTEGER});
 	</insert>
 
-	<update id="createPostsTable" parameterType="java.lang.String">
-		${value}
+	<update id="createPostsTable" parameterType="String">
+		${createPostQuery}
 	</update>
 
-	<update id="createCommentsTable" parameterType="java.lang.String">
-		${value}
+	<update id="createCommentsTable" parameterType="String">
+		${createCommentsQuery}
 	</update>
 
-	<update id="createReplesTable" parameterType="java.lang.String">
-		${value}
+	<update id="createReplesTable" parameterType="String">
+		${createReplesQuery}
 	</update>
 
 	<insert id="insertCategory" parameterType="Integer">
@@ -40,5 +59,37 @@
 		VALUES(#{code, jdbcType=INTEGER}, "공지사항");
 	</insert>
 	<!-- 프로젝트 생성 기능 끝 -->
+
+	<!-- 프로젝트 참여 기능 시작 -->
+	<select id="projectCodeCheck" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*) 
+		FROM projects 
+		WHERE code = #{code};
+	</select>
+
+	<select id="projectJoinCheck" parameterType="ProjectListDataDTO" resultType="Integer">
+		SELECT COUNT(*) 
+		FROM joinedprojects 
+		WHERE email = #{email} AND code = #{code};
+	</select>
+
+	<insert id="joinProjectProcess" parameterType="ProjectListDataDTO">
+		INSERT INTO joinedprojects 
+		VALUES(#{email}, #{code});
+	</insert>
+	<!-- 프로젝트 참여 기능 끝 -->
+
+	<!-- 프로젝트 탈퇴 기능 시작 -->
+	<select id="projectCreatorCheck" parameterType="ProjectListDataDTO" resultType="Integer">
+		SELECT COUNT(*) 
+		FROM projects 
+		WHERE code = #{code} AND creatoremail = #{email};
+	</select>
+
+	<delete id="exitProjectProcess" parameterType="ProjectListDataDTO">
+		DELETE FROM joinedprojects 
+		WHERE code = #{code} AND email = #{email};
+	</delete>
+	<!-- 프로젝트 탈퇴 기능 끝 -->
 
 </mapper>
