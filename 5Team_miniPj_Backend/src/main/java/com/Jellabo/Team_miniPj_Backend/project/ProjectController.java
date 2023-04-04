@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import com.Jellabo.Team_miniPj_Backend.CodeEmailDTO;
 import com.Jellabo.Team_miniPj_Backend.users.UserDTO;
 
 @RestController
@@ -18,8 +19,8 @@ public class ProjectController {
 
 	// 현재 프로젝트 정보 불러오기
 	@PostMapping("/loadProjectInfo")
-	public ProjectDataDTO loadProjectInfo(@RequestBody ProjectDataDTO projectData) {
-		return pjService.loadProjectInfo(projectData.getCode(), projectData.getEmail());
+	public ProjectDataDTO loadProjectInfo(@RequestBody CodeEmailDTO codeEmailData) {
+		return pjService.loadProjectInfo(codeEmailData);
 	}
 
 	// 현재 프로젝트 카테고리 불러오기
@@ -42,20 +43,20 @@ public class ProjectController {
 
 	// 현재 프로젝트 참여자 목록 불러오기
 	@PostMapping("/loadUserList")
-	public List<UserDTO> loadUserList(@RequestBody ProjectDataDTO code) {
-		return pjService.loadUserList(code.getCode());
+	public List<UserDTO> loadUserList(@RequestBody CodeEmailDTO codeEmailData) {
+		return pjService.loadUserList(codeEmailData.getCode());
 	}
 
 	// 멤버 초대
 	@PostMapping("/addUserProcess")
-	public int addUserProcess(@RequestBody ProjectDataDTO data) {
-		return pjService.addUserProcess(data.getCode(), data.getEmail());
+	public int addUserProcess(@RequestBody CodeEmailDTO codeEmailData) {
+		return pjService.addUserProcess(codeEmailData.getCode(), codeEmailData.getEmail());
 	}
 
 	// 멤버 추방
 	@PostMapping("/kickUserProcess")
-	public int kickUserProcess(@RequestBody ProjectDataDTO data) {
-		return pjService.kickUserProcess(data.getCode(), data.getEmail());
+	public int kickUserProcess(@RequestBody CodeEmailDTO codeEmailData) {
+		return pjService.kickUserProcess(codeEmailData.getCode(), codeEmailData.getEmail());
 	}
 
 	// 현재 프로젝트 정보 수정
@@ -66,8 +67,8 @@ public class ProjectController {
 
 	// 프로젝트 삭제
 	@PostMapping("/deleteProjectProcess")
-	public int deleteProjectProcess(@RequestBody ProjectDataDTO project) {
-		return pjService.deleteProjectProcess(project);
+	public int deleteProjectProcess(@RequestBody CodeEmailDTO codeEmailData) {
+		return pjService.deleteProjectProcess(codeEmailData);
 	}
 	
 	@ExceptionHandler(Exception.class)

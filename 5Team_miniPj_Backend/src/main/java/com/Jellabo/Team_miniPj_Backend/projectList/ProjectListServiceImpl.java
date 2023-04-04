@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.Jellabo.Team_miniPj_Backend.CodeEmailDTO;
+
 @Service("pjlService")
 public class ProjectListServiceImpl implements ProjectListService {
 
@@ -29,7 +31,6 @@ public class ProjectListServiceImpl implements ProjectListService {
 	public int createProjectProcess(ProjectListDataDTO project) {
 		// 프로젝트 code 리스트 불러오기
 		List<Integer> codeList = mapper.codeList();
-		System.out.println(codeList.size() == 0);
 
 		// 프로젝트 code 난수 생성
 		int code;
@@ -54,7 +55,7 @@ public class ProjectListServiceImpl implements ProjectListService {
 		mapper.insertProject(project);
 
 		// 참여 프로젝트 목록에 저장
-		mapper.insertJoinedProject(project);
+		mapper.insertJoinedProject(code, project.getCreatoremail());
 
 		String sqlQuery1 = "", sqlQuery2 = "", sqlQuery3 = "";
 
@@ -101,20 +102,20 @@ public class ProjectListServiceImpl implements ProjectListService {
 	}
 
 	@Override // 프로젝트 참여
-	public int joinProjectProcess(ProjectListDataDTO project) {
-		int res = mapper.projectCodeCheck(project.getCode());
+	public int joinProjectProcess(CodeEmailDTO codeEmailData) {
+		int res = mapper.projectCodeCheck(codeEmailData.getCode());
 
 		// 실재 프로젝트 여부 확인
 		if (res == 0) {
 			res = -1;
 		} else {
-			res = mapper.projectJoinCheck(project);
+			res = mapper.projectJoinCheck(codeEmailData);
 
 			// 프로젝트 참여 중 여부 확인
 			if (res == 1) {
 				res = 0;
 			} else {
-				res = mapper.joinProjectProcess(project);
+				res = mapper.joinProjectProcess(codeEmailData);
 			}
 		}
 
@@ -122,14 +123,14 @@ public class ProjectListServiceImpl implements ProjectListService {
 	}
 
 	@Override // 프로젝트 탈퇴
-	public int exitProjectProcess(ProjectListDataDTO project) {
-		int res = mapper.projectCreatorCheck(project);
+	public int exitProjectProcess(CodeEmailDTO codeEmailData) {
+		int res = mapper.projectCreatorCheck(codeEmailData);
 
 		// 프로젝트 관리자 여부 확인
 		if (res == 1) {
 			res = 0;
 		} else {
-			res = mapper.exitProjectProcess(project);
+			res = mapper.exitProjectProcess(codeEmailData);
 		}
 
 		return res;

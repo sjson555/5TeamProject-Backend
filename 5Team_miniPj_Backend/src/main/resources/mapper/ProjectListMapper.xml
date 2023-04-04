@@ -6,18 +6,18 @@
 <mapper namespace="com.Jellabo.Team_miniPj_Backend.projectList.ProjectListMapper">
 
 	<!-- 프로젝트 리스트 불러오기 기능 시작 -->
-	<select id="projectsListCheck" parameterType="String" resultType="Integer">
+	<select id="projectsListCheck" resultType="Integer">
 		SELECT COUNT(*) 
 		FROM joinedprojects 
-		WHERE email = #{email};
+		WHERE email = #{email, jdbcType=VARCHAR};
 	</select>
 
-	<select id="loadProjectList" parameterType="String" resultType="ProjectListDataDTO">
+	<select id="loadProjectList" resultType="ProjectListDataDTO">
 		SELECT j.code, p.title, p.description, 
 		DATE_FORMAT(p.deadline, "%Y-%m-%d") AS deadline, p.creatoremail 
 		FROM joinedprojects j 
 		INNER JOIN projects p ON j.code = p.code 
-		WHERE j.email = #{email} 
+		WHERE j.email = #{email, jdbcType=VARCHAR} 
 		ORDER BY p.deadline ASC;
 	</select>
 	<!-- 프로젝트 리스트 불러오기 기능 끝 -->
@@ -31,15 +31,21 @@
 
 	<insert id="insertProject" parameterType="ProjectListDataDTO">
 		INSERT INTO projects 
-		VALUES(#{code, jdbcType=INTEGER}, #{title, jdbcType=VARCHAR}, 
-		#{description, jdbcType=VARCHAR}, #{creatoremail, jdbcType=VARCHAR}, 
-		#{deadline, jdbcType=DATE});
+		VALUES(
+			#{code, jdbcType=INTEGER}, 
+			#{title, jdbcType=VARCHAR}, 
+			#{description, jdbcType=VARCHAR}, 
+			#{creatoremail, jdbcType=VARCHAR}, 
+			#{deadline, jdbcType=DATE}
+		);
 	</insert>
 
 	<insert id="insertJoinedProject" parameterType="ProjectListDataDTO">
 		INSERT INTO joinedprojects 
-		VALUES(#{creatoremail, jdbcType=VARCHAR}, 
-		#{code, jdbcType=INTEGER});
+		VALUES(
+			#{creatoremail, jdbcType=VARCHAR}, 
+			#{code, jdbcType=INTEGER}
+		);
 	</insert>
 
 	<update id="createPostsTable" parameterType="String">
@@ -56,26 +62,33 @@
 
 	<insert id="insertCategory" parameterType="Integer">
 		INSERT INTO category 
-		VALUES(#{code, jdbcType=INTEGER}, "공지사항");
+		VALUES(
+			#{code, jdbcType=INTEGER}, 
+			"공지사항"
+		);
 	</insert>
 	<!-- 프로젝트 생성 기능 끝 -->
 
 	<!-- 프로젝트 참여 기능 시작 -->
-	<select id="projectCodeCheck" parameterType="Integer" resultType="Integer">
+	<select id="projectCodeCheck" resultType="Integer">
 		SELECT COUNT(*) 
 		FROM projects 
-		WHERE code = #{code};
+		WHERE code = #{code, jdbcType=INTEGER};
 	</select>
 
-	<select id="projectJoinCheck" parameterType="ProjectListDataDTO" resultType="Integer">
+	<select id="projectJoinCheck" resultType="Integer">
 		SELECT COUNT(*) 
 		FROM joinedprojects 
-		WHERE email = #{email} AND code = #{code};
+		WHERE email = #{email, jdbcType=VARCHAR} 
+		AND code = #{code, jdbcType=INTEGER};
 	</select>
 
 	<insert id="joinProjectProcess" parameterType="ProjectListDataDTO">
 		INSERT INTO joinedprojects 
-		VALUES(#{email}, #{code});
+		VALUES(
+			#{email, jdbcType=VARCHAR}, 
+			#{code, jdbcType=INTEGER}
+		);
 	</insert>
 	<!-- 프로젝트 참여 기능 끝 -->
 
@@ -83,12 +96,14 @@
 	<select id="projectCreatorCheck" parameterType="ProjectListDataDTO" resultType="Integer">
 		SELECT COUNT(*) 
 		FROM projects 
-		WHERE code = #{code} AND creatoremail = #{email};
+		WHERE code = #{code, jdbcType=INTEGER} 
+		AND creatoremail = #{email, jdbcType=VARCHAR};
 	</select>
 
 	<delete id="exitProjectProcess" parameterType="ProjectListDataDTO">
 		DELETE FROM joinedprojects 
-		WHERE code = #{code} AND email = #{email};
+		WHERE code = #{code, jdbcType=INTEGER} 
+		AND email = #{email, jdbcType=VARCHAR};
 	</delete>
 	<!-- 프로젝트 탈퇴 기능 끝 -->
 

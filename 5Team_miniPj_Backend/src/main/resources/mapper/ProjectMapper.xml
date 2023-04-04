@@ -7,33 +7,43 @@
 
 	<!-- 현재 프로젝트 정보 불러오기 시작 -->
 	<select id="projectCodeCheck" resultType="Integer">
-		SELECT COUNT(*) FROM projects WHERE code = #{code};
+		SELECT COUNT(*) 
+		FROM projects 
+		WHERE code = #{code, jdbcType=INTEGER};
 	</select>
 	
 	<select id="projectJoinCheck" resultType="Integer">
-		SELECT COUNT(*) FROM joinedprojects WHERE email = #{email} AND code = #{code};
+		SELECT COUNT(*) 
+		FROM joinedprojects 
+		WHERE email = #{email, jdbcType=VARCHAR} 
+		AND code = #{code, jdbcType=INTEGER};
 	</select>
 
 	<select id="loadProjectInfo" resultType="ProjectDataDTO">
 		SELECT code, title, description, nickname, creatoremail, 
 		DATE_FORMAT(deadline, '%Y-%m-%d') AS deadline
 		FROM projects p
-		INNER JOIN users u ON p.creatoremail = u.email WHERE p.code = #{code};
+		INNER JOIN users u ON p.creatoremail = u.email 
+		WHERE p.code = #{code, jdbcType=INTEGER};
 	</select>
 	<!-- 현재 프로젝트 정보 불러오기 끝 -->
 
 	<!-- 현재 프로젝트 카테고리 불러오기 시작 -->
 	<select id="loadCategories" resultType="String">
-		SELECT category FROM category WHERE code = #{code};
+		SELECT category 
+		FROM category 
+		WHERE code = #{code, jdbcType=INTEGER};
 	</select>
 	<!-- 현재 프로젝트 카테고리 불러오기 끝 -->
 
 	<!-- 카테고리 생성 시작 -->
 	<insert id="createCategoryProcess" parameterType="CategoryDTO">
-		INSERT INTO category SELECT #{code}, #{category} 
+		INSERT INTO category 
+		SELECT #{code, jdbcType=INTEGER}, #{category, jdbcType=VARCHAR} 
 		WHERE NOT EXISTS(
 			SELECT 1 FROM category 
-			WHERE code = #{code} AND category = #{category}
+			WHERE code = #{code, jdbcType=INTEGER} 
+			AND category = #{category, jdbcType=VARCHAR}
 		);
 	</insert>
 	<!-- 카테고리 생성 끝 -->
@@ -41,12 +51,13 @@
 	<!-- 카테고리 삭제 시작 -->
 	<delete id="deleteCategoryPost" parameterType="CategoryDTO">
 		DELETE FROM posts${code} 
-		WHERE category = #{category};
+		WHERE category = #{category, jdbcType=VARCHAR};
 	</delete>
 	
 	<delete id="deleteCategoryProcess" parameterType="CategoryDTO">
 		DELETE FROM category 
-		WHERE code = #{code} AND category = #{category};
+		WHERE code = #{code, jdbcType=INTEGER} 
+		AND category = #{category, jdbcType=VARCHAR};
 	</delete>
 	<!-- 카테고리 삭제 끝 -->
 
@@ -55,19 +66,25 @@
 		SELECT j.email, u.name, u.nickname FROM projects p
 		INNER JOIN joinedprojects j ON p.code = j.code
 		INNER JOIN users u ON j.email = u.email 
-		WHERE p.code = #{code};
+		WHERE p.code = #{code, jdbcType=INTEGER};
 	</select>
 	<!-- 현재 프로젝트 참여자 목록 불러오기 끝 -->
 
 	<!-- 멤버 추가 시작 -->
 	<select id="emailCheck" resultType="Integer">
-		SELECT COUNT(*) FROM users WHERE email = #{email};
+		SELECT COUNT(*) 
+		FROM users 
+		WHERE email = #{email, jdbcType=VARCHAR};
 	</select>
 
 	<insert id="addUserProcess" parameterType="map">
-		INSERT INTO joinedprojects (code, email) SELECT #{code}, #{email}
+		INSERT INTO joinedprojects (code, email) 
+		SELECT #{code, jdbcType=INTEGER}, #{email, jdbcType=VARCHAR}
 		WHERE NOT EXISTS (
-			SELECT 1 FROM joinedprojects WHERE email = #{email} AND code = #{code}
+			SELECT 1 
+			FROM joinedprojects 
+			WHERE email = #{email, jdbcType=VARCHAR} 
+			AND code = #{code, jdbcType=INTEGER}
 		);
 	</insert>
 	<!-- 멤버 추가 끝 -->
@@ -75,15 +92,18 @@
 	<!-- 맴버 추방 시작 -->
 	<delete id="kickUserProcess" parameterType="map">
 		DELETE FROM joinedprojects
-		WHERE email = #{email} AND code = #{code};
+		WHERE email = #{email, jdbcType=VARCHAR} 
+		AND code = #{code, jdbcType=INTEGER};
 	</delete>
 	<!-- 멤버 추방 끝 -->
 
 	<!-- 현재 프로젝트 정보 수정 시작 -->
 	<update id="resettingProjectProcess" parameterType="map">
 		UPDATE projects 
-		SET title = #{title}, description = #{description}, deadline = #{deadline}
-		WHERE code = #{code};
+		SET title = #{title, jdbcType=VARCHAR}, 
+		description = #{description, jdbcType=VARCHAR}, 
+		deadline = #{deadline, jdbcType=DATE}
+		WHERE code = #{code, jdbcType=INTEGER};
 	</update>
 	<!-- 현재 프로젝트 정보 수정 끝 -->
 
@@ -91,18 +111,18 @@
 	<select id="isCreator" parameterType="ProjectDataDTO" resultType="Integer">
 		SELECT COUNT(*) FROM projects 
 		WHERE code = #{code, jdbcType=INTEGER}
-		AND creatoremail = #{creatoremail, jdbcType=VARCHAR};
+		AND creatoremail = #{email, jdbcType=VARCHAR};
 	</select>
 
-	<update id="dropReplesTable" parameterType="String">
+	<update id="dropReplesTable" parameterType="Integer">
 		${dropReplesTable}
 	</update>
 
-	<update id="dropCommentsTable" parameterType="String">
+	<update id="dropCommentsTable" parameterType="Integer">
 		${dropCommentsTable}
 	</update>
 
-	<update id="dropPostsTable" parameterType="String">
+	<update id="dropPostsTable" parameterType="Integer">
 		${dropPostsTable}
 	</update>
 

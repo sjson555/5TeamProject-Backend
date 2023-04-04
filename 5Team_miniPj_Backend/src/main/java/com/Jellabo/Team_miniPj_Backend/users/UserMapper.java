@@ -5,14 +5,14 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper {
 
 	// 회원가입/로그인 공통 기능
-	int emailCheck(@Param("email") String email);
+	int emailCheck(String email);
 
 	// 회원가입 기능
 	int registerProcess(UserDTO user);
 
 	// 로그인 기능
-	int loginCheck(UserDTO user);
+	int loginCheck(LoginDTO loginData);
 
-	UserDTO loginProcess(UserDTO user);
+	UserDTO loginProcess(LoginDTO loginData);
 
 }

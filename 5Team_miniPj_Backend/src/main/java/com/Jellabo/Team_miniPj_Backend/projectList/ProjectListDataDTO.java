@@ -12,7 +12,6 @@ public class ProjectListDataDTO {
 	private int code;
 	private String title;
 	private String description;
-	private String email;
 	private String creatoremail;
 	private Date deadline;
 }

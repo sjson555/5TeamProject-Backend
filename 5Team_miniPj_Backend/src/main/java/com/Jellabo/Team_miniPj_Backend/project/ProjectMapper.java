@@ -4,14 +4,15 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.Jellabo.Team_miniPj_Backend.CodeEmailDTO;
 import com.Jellabo.Team_miniPj_Backend.users.UserDTO;
 
 public interface ProjectMapper {
 
 	// 현재 프로젝트 정보 불러오기
 	int projectCodeCheck(int code);
-	int projectJoinCheck(@Param("code") int code, @Param("email") String email);
-	ProjectDataDTO loadProjectInfo(int code, String email);
+	int projectJoinCheck(CodeEmailDTO codeEmailData);
+	ProjectDataDTO loadProjectInfo(int code);
 
 	// 현재 프로젝트 카테고리 불러오기
 	List<String> loadCategories(int code);
@@ -38,7 +39,7 @@ public interface ProjectMapper {
 	int resettingProjectProcess(ProjectDataDTO projectData);
 
 	// 프로젝트 삭제
-	int isCreator(ProjectDataDTO project);
+	int isCreator(CodeEmailDTO codeEmailData);
 
 	void dropReplesTable(String dropReplesTable);
 

@@ -16,14 +16,16 @@ public class PostController {
 	// 게시글
 	// 게시글 목록 불러오기
 	@GetMapping("/project/{code}/{category}")
-	public List<PostDTO> loadPost(@PathVariable("code") int code, @PathVariable("category") String category) {
-		return poService.loadPost(code, category);
+	public List<PostDTO> loadPost(@PathVariable("code") String code, @PathVariable("category") String category) {
+		int codeNum = Integer.parseInt(code);
+		return poService.loadPost(codeNum, category);
 	}
 
 	// 게시글 상세보기
 	@GetMapping("/project/{code}/{category}/{postnum}")
-	public PostDTO detailPost(@PathVariable("code") int code, @PathVariable("postnum") String postnum) {
-		return poService.detailPost(code, postnum);
+	public PostDTO detailPost(@PathVariable("code") String code, @PathVariable("postnum") String postnum) {
+		int codeNum = Integer.parseInt(code);
+		return poService.detailPost(codeNum, postnum);
 	}
 
 	// 게시글 작성하기

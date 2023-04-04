@@ -13,14 +13,14 @@ public class UserController {
 
 	// 회원가입 과정
 	@PostMapping("/registerProcess")
-	public int registerProcess(@RequestBody UserDTO user) {
-		return urService.registerProcess(user);
+	public int registerProcess(@RequestBody UserDTO userData) {
+		return urService.registerProcess(userData);
 	}
 
 	// 로그인 과정
 	@PostMapping("/loginProcess")
-	public UserDTO loginProcess(@RequestBody UserDTO user) {
-		return urService.loginProcess(user);
+	public UserDTO loginProcess(@RequestBody LoginDTO loginData) {
+		return urService.loginProcess(loginData);
 	}
 
 }

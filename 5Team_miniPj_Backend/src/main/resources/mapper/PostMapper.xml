@@ -8,12 +8,14 @@
 	<!-- 게시글 목록 불러오기 시작 -->
 	<select id="postCount" resultType="Integer">
 		SELECT COUNT(*) 
-		FROM posts${code} WHERE category = #{category};
+		FROM posts${code} 
+		WHERE category = #{category, jdbcType=VARCHAR};
 	</select>
 
 	<select id="loadPost" parameterType="map" resultType="PostDTO">
 		SELECT postnum, posttitle, posteddate
-		FROM posts${code} WHERE category = #{category} 
+		FROM posts${code} 
+		WHERE category = #{category, jdbcType=VARCHAR} 
 		ORDER BY postnum DESC;
 	</select>
 	<!-- 게시글 목록 불러오기 끝 -->
@@ -22,7 +24,7 @@
 	<select id="detailPostCount" resultType="Integer">
 		SELECT COUNT(*) 
 		FROM posts${code} 
-		WHERE postnum = #{postnum};
+		WHERE postnum = #{postnum, jdbcType=INTEGER};
 	</select>
 
 	<select id="detailPost" resultType="PostDTO">
@@ -31,7 +33,7 @@
 		po.powriteremail, po.posteddate 
 		FROM posts${code} po INNER JOIN users u 
 		ON po.powriteremail = u.email 
-		WHERE postnum = #{postnum};
+		WHERE postnum = #{postnum, jdbcType=INTEGER};
 	</select>
 	<!-- 게시글 상세보기 끝 -->
 
@@ -39,23 +41,29 @@
 	<insert id="writePost" parameterType="PostDTO">
 		INSERT INTO posts${code} 
 		(category, posttitle, postcontent, powriteremail) 
-		VALUES(#{category}, #{posttitle}, 
-		#{postcontent}, #{powriteremail});
+		VALUES(
+			#{category, jdbcType=VARCHAR}, 
+			#{posttitle, jdbcType=VARCHAR}, 
+			#{postcontent, jdbcType=VARCHAR}, 
+			#{powriteremail, jdbcType=VARCHAR}
+		);
 	</insert>
 	<!-- 게시글 작성하기 끝 -->
 
 	<!-- 게시글 수정하기 시작 -->
 	<update id="updatePost" parameterType="PostDTO">
 		UPDATE posts${code} 
-		SET category = #{category}, posttitle = #{posttitle}, 
-		postcontent = #{postcontent} where postnum = #{postnum};
+		SET category = #{category, jdbcType=VARCHAR}, 
+		posttitle = #{posttitle, jdbcType=VARCHAR}, 
+		postcontent = #{postcontent, jdbcType=VARCHAR} 
+		WHERE postnum = #{postnum, jdbcType=INTEGER};
 	</update>
 	<!-- 게시글 수정하기 끝 -->
 
 	<!-- 게시글 삭제하기 시작 -->
 	<delete id="deletePost" parameterType="int">
 		DELETE FROM posts${code} 
-		WHERE postnum = #{postnum};
+		WHERE postnum = #{postnum, jdbcType=INTEGER};
 	</delete>
 	<!-- 게시글 삭제하기 끝 -->
 
@@ -64,7 +72,7 @@
 	<select id="commentsCount" resultType="Integer">
 		SELECT COUNT(*) 
 		FROM comments${code}
-		WHERE postnum = #{postnum};
+		WHERE postnum = #{postnum, jdbcType=INTEGER};
 	</select>
 
 	<select id="loadComments" resultType="CommentDTO">
@@ -72,7 +80,7 @@
 		co.cowriteremail, u.nickname 
 		FROM comments${code} co 
 		INNER JOIN users u ON co.cowriteremail = u.email 
-		WHERE co.postnum = #{postnum} 
+		WHERE co.postnum = #{postnum, jdbcType=INTEGER} 
 		ORDER BY co.commentnum ASC;
 	</select>
 	<!-- 댓글 목록 불러오기 끝 -->
@@ -81,22 +89,26 @@
 	<insert id="writeComment" parameterType="CommentDTO">
 		INSERT INTO comments${code} 
 		(postnum, commentcontent, cowriteremail) 
-		VALUES(#{postnum}, #{commentcontent}, #{cowriteremail});
+		VALUES(
+			#{postnum, jdbcType=INTEGER}, 
+			#{commentcontent, jdbcType=VARCHAR}, 
+			#{cowriteremail, jdbcType=VARCHAR}
+		);
 	</insert>
 	<!-- 댓글 작성하기 끝 -->
 
 	<!-- 댓글 수정하기 시작 -->
 	<update id="updateComment" parameterType="CommentDTO">
 		UPDATE comments${code} 
-		SET commentcontent = #{commentcontent} 
-		WHERE commentnum = #{commentnum};
+		SET commentcontent = #{commentcontent, jdbcType=VARCHAR} 
+		WHERE commentnum = #{commentnum, jdbcType=INTEGER};
 	</update>
 	<!-- 댓글 수정하기 끝 -->
 
 	<!-- 댓글 삭제하기 시작 -->
 	<delete id="deleteComment" parameterType="CommentDTO">
 		DELETE FROM comments${code} 
-		WHERE commentnum = #{commentnum};
+		WHERE commentnum = #{commentnum, jdbcType=INTEGER};
 	</delete>
 	<!-- 댓글 삭제하기 끝 -->
 
@@ -105,7 +117,7 @@
 	<select id="replesCount" resultType="Integer">
 		SELECT COUNT(*) 
 		FROM reples${code}
-		WHERE commentnum = #{commentnum};
+		WHERE commentnum = #{commentnum, jdbcType=INTEGER};
 	</select>
 
 	<select id="loadReples" resultType="RepleDTO">
@@ -113,7 +125,7 @@
 		re.rewriteremail, u.nickname 
 		FROM reples${code} re INNER JOIN users u 
 		ON re.rewriteremail = u.email
-		WHERE re.commentnum = #{commentnum} 
+		WHERE re.commentnum = #{commentnum, jdbcType=INTEGER} 
 		ORDER BY re.replenum ASC;
 	</select>
 	<!-- 답글 목록 불러오기 끝 -->
@@ -122,23 +134,27 @@
 	<insert id="writeReple" parameterType="RepleDTO">
 		INSERT INTO reples${code} 
 		(postnum, commentnum, replecontent, rewriteremail)
-		VALUES (#{postnum}, #{commentnum}, 
-		#{replecontent}, #{rewriteremail});
+		VALUES (
+			#{postnum, jdbcType=INTEGER}, 
+			#{commentnum, jdbcType=INTEGER}, 
+			#{replecontent, jdbcType=VARCHAR}, 
+			#{rewriteremail, jdbcType=VARCHAR}
+		);
 	</insert>
 	<!-- 답글 작성하기 끝 -->
 
 	<!-- 답글 수정하기 시작 -->
 	<update id="updateReple" parameterType="RepleDTO">
 		UPDATE reples${code} 
-		SET replecontent = #{replecontent} 
-		WHERE replenum = #{replenum};
+		SET replecontent = #{replecontent, jdbcType=VARCHAR} 
+		WHERE replenum = #{replenum, jdbcType=INTEGER};
 	</update>
 	<!-- 답글 수정하기 끝 -->
 
 	<!-- 답글 삭제하기 시작 -->
 	<delete id="deleteReple" parameterType="RepleDTO">
 		DELETE FROM reples${code} 
-		WHERE replenum = #{replenum};
+		WHERE replenum = #{replenum, jdbcType=INTEGER};
 	</delete>
 	<!-- 답글 삭제하기 끝 -->
 

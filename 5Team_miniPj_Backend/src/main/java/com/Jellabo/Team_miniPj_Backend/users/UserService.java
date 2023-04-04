@@ -6,6 +6,6 @@ public interface UserService {
 	int registerProcess(UserDTO user);
 
 	// 로그인 기능
-	UserDTO loginProcess(UserDTO user);
+	UserDTO loginProcess(LoginDTO loginData);
 
 }

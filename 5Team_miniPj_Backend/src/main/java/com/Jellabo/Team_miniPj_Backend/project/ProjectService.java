@@ -2,12 +2,13 @@ package com.Jellabo.Team_miniPj_Backend.project;
 
 import java.util.List;
 
+import com.Jellabo.Team_miniPj_Backend.CodeEmailDTO;
 import com.Jellabo.Team_miniPj_Backend.users.UserDTO;
 
 public interface ProjectService {
 
 	// 현재 프로젝트 정보 불러오기
-	ProjectDataDTO loadProjectInfo(int code, String email);
+	ProjectDataDTO loadProjectInfo(CodeEmailDTO codeEmailData);
 
 	// 현재 프로젝트 카테고리 불러오기
 	List<String> loadCategories(int code);
@@ -31,6 +32,6 @@ public interface ProjectService {
 	int resettingProjectProcess(ProjectDataDTO projectData);
 
 	// 프로젝트 삭제
-	int deleteProjectProcess(ProjectDataDTO project);
+	int deleteProjectProcess(CodeEmailDTO codeEmailData);
 
 }

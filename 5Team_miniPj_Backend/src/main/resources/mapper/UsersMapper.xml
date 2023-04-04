@@ -6,30 +6,39 @@
 <mapper namespace="com.Jellabo.Team_miniPj_Backend.users.UserMapper">
 
 	<!-- 회원가입/로그인 공통 기능 시작 -->
-	<select id="emailCheck" parameterType="String" resultType="Integer">
+	<select id="emailCheck" resultType="Integer">
 		SELECT COUNT(*) 
 		FROM users 
-		WHERE email = #{email};
+		WHERE email = #{email, jdbcType=VARCHAR};
 	</select>
 	<!-- 회원가입/로그인 공통 기능 끝 -->
 
 	<!-- 회원가입 기능 시작 -->
 	<insert id="registerProcess" parameterType="UserDTO">
 		INSERT INTO users 
-		VALUES(#{email}, #{password}, 
-		#{name}, #{nickname}, #{birthday});
+		VALUES(
+			#{email, jdbcType=VARCHAR}, 
+			#{password, jdbcType=VARCHAR}, 
+			#{name, jdbcType=VARCHAR}, 
+			#{nickname, jdbcType=VARCHAR}, 
+			#{birthday, jdbcType=DATE}
+		);
 	</insert>
 	<!-- 회원가입 기능 끝 -->
 
 	<!-- 로그인 기능 시작 -->
-	<select id="loginCheck" parameterType="UserDTO" resultType="Integer">
-		SELECT COUNT(*) FROM users 
-		WHERE email = #{email} AND password = #{password};
+	<select id="loginCheck" resultType="Integer">
+		SELECT COUNT(*) 
+		FROM users 
+		WHERE email = #{email, jdbcType=VARCHAR} 
+		AND password = #{password, jdbcType=VARCHAR};
 	</select>
 
-	<select id="loginProcess" parameterType="UserDTO" resultType="UserDTO">
-		SELECT email, nickname FROM users
-		WHERE email = #{email} AND password = #{password};
+	<select id="loginProcess" resultType="UserDTO">
+		SELECT email, nickname 
+		FROM users
+		WHERE email = #{email, jdbcType=VARCHAR} 
+		AND password = #{password, jdbcType=VARCHAR};
 	</select>
 	<!-- 로그인 기능 끝 -->
 
